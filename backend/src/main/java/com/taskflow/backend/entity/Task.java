@@ -16,6 +16,10 @@ public class Task {
 
     private String status;
 
+    private String priority;
+
+    private String dueDate;
+
     public Task() {
     }
 
@@ -49,5 +53,21 @@ public class Task {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
     }
 }
