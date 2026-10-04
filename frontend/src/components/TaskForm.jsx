@@ -8,6 +8,7 @@ function TaskForm({ getTasks, editTask, setEditTask, showToast }) {
   const [status, setStatus] = useState("Pending");
   const [priority, setPriority] = useState("Medium");
   const [dueDate, setDueDate] = useState("");
+  const [category, setCategory] = useState("Other");
 
   useEffect(() => {
     if (editTask) {
@@ -16,6 +17,7 @@ function TaskForm({ getTasks, editTask, setEditTask, showToast }) {
       setStatus(editTask.status || "Pending");
       setPriority(editTask.priority || "Medium");
       setDueDate(editTask.dueDate || "");
+      setCategory(editTask.category || "Other");
     }
   }, [editTask]);
 
@@ -36,6 +38,7 @@ function TaskForm({ getTasks, editTask, setEditTask, showToast }) {
           status,
           priority,
           dueDate,
+          category,
         });
 
         showToast("Task updated successfully!");
@@ -48,6 +51,7 @@ function TaskForm({ getTasks, editTask, setEditTask, showToast }) {
           status,
           priority,
           dueDate,
+          category,
         });
 
         showToast("Task added successfully!");
@@ -58,6 +62,7 @@ function TaskForm({ getTasks, editTask, setEditTask, showToast }) {
       setStatus("Pending");
       setPriority("Medium");
       setDueDate("");
+      setCategory("Other");
 
       setEditTask(null);
 
@@ -106,6 +111,17 @@ function TaskForm({ getTasks, editTask, setEditTask, showToast }) {
         <option value="High">High</option>
         <option value="Medium">Medium</option>
         <option value="Low">Low</option>
+      </select>
+
+      <select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+      >
+        <option value="College">College</option>
+        <option value="Work">Work</option>
+        <option value="Project">Project</option>
+        <option value="Personal">Personal</option>
+        <option value="Other">Other</option>
       </select>
 
       <input

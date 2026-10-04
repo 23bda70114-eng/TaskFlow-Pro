@@ -27,7 +27,25 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
       showToast("Error deleting task");
 
     }
+  };
 
+  const isOverdue = (task) => {
+
+    if (!task.dueDate) {
+      return false;
+    }
+
+    if (task.status === "Completed") {
+      return false;
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const dueDate = new Date(task.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+
+    return dueDate < today;
   };
 
   return (
@@ -79,6 +97,16 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
               >
                 {task.priority || "Medium"}
               </span>
+
+              <span className="category-badge">
+                🏷️ {task.category || "Other"}
+              </span>
+
+              {isOverdue(task) && (
+                <span className="overdue-badge">
+                  ⚠️ Overdue
+                </span>
+              )}
 
             </div>
 

@@ -20,6 +20,8 @@ public class Task {
 
     private String dueDate;
 
+    private String category;
+
     public Task() {
     }
 
@@ -69,5 +71,13 @@ public class Task {
 
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
