@@ -1,9 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import API from "../services/api";
+import TaskComments from "./TaskComments";
+import ActivityHistory from "./ActivityHistory";
 
 function TaskList({ tasks, getTasks, setEditTask, showToast }) {
 
   const [pendingDelete, setPendingDelete] = useState(null);
+  const [openComments, setOpenComments] = useState(null);
+  const [openActivity, setOpenActivity] = useState(null);
+
   const deleteTimerRef = useRef(null);
 
   useEffect(() => {
@@ -35,7 +40,6 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
       await API.delete(`/tasks/${pendingDelete.id}`);
 
       setPendingDelete(null);
-
       await getTasks();
 
       showToast("Task deleted permanently!");
@@ -52,7 +56,6 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
     }
 
     setPendingDelete(null);
-
     showToast("Task restored!");
   };
 
@@ -83,6 +86,24 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
     return dueDate < today;
   };
 
+  const toggleComments = (taskId) => {
+    if (openComments === taskId) {
+      setOpenComments(null);
+    } else {
+      setOpenComments(taskId);
+      setOpenActivity(null);
+    }
+  };
+
+  const toggleActivity = (taskId) => {
+    if (openActivity === taskId) {
+      setOpenActivity(null);
+    } else {
+      setOpenActivity(taskId);
+      setOpenComments(null);
+    }
+  };
+
   return (
     <div className="right">
 
@@ -90,7 +111,6 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
 
       {pendingDelete && (
         <div className="undo-delete-bar">
-
           <div>
             <strong>🗑️ Task deleted</strong>
             <span>{pendingDelete.title}</span>
@@ -99,28 +119,20 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
           <button onClick={undoDelete}>
             ↩️ Undo
           </button>
-
         </div>
       )}
 
       {tasks.length === 0 ? (
-
         <div className="empty-state">
-
-          <div className="empty-icon">
-            📋
-          </div>
+          <div className="empty-icon">📋</div>
 
           <h3>No Tasks Found</h3>
 
           <p>
             Try adding a new task or changing your search/filter.
           </p>
-
         </div>
-
       ) : (
-
         tasks
           .filter(
             (task) =>
@@ -128,7 +140,6 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
               task.id !== pendingDelete.id
           )
           .map((task) => (
-
             <div className="card" key={task.id}>
 
               <h3>{task.title}</h3>
@@ -171,8 +182,6 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
 
               </div>
 
-              {/* Custom Tags */}
-
               {task.tags && (
                 <div className="custom-tags">
 
@@ -181,14 +190,12 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
                     .map((tag) => tag.trim())
                     .filter((tag) => tag !== "")
                     .map((tag, index) => (
-
                       <span
                         className="custom-tag"
                         key={`${tag}-${index}`}
                       >
                         #{tag}
                       </span>
-
                     ))}
 
                 </div>
@@ -202,24 +209,43 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
 
               <div className="buttons">
 
-                <button
-                  onClick={() => setEditTask(task)}
-                >
+                <button onClick={() => setEditTask(task)}>
                   Edit
                 </button>
 
-                <button
-                  onClick={() => deleteTask(task)}
-                >
+                <button onClick={() => deleteTask(task)}>
                   Delete
+                </button>
+
+                <button onClick={() => toggleComments(task.id)}>
+                  {openComments === task.id
+                    ? "💬 Hide Comments"
+                    : "💬 Comments"}
+                </button>
+
+                <button onClick={() => toggleActivity(task.id)}>
+                  {openActivity === task.id
+                    ? "📜 Hide History"
+                    : "📜 History"}
                 </button>
 
               </div>
 
+              {openComments === task.id && (
+                <TaskComments
+                  taskId={task.id}
+                  showToast={showToast}
+                />
+              )}
+
+              {openActivity === task.id && (
+                <ActivityHistory
+                  taskId={task.id}
+                />
+              )}
+
             </div>
-
           ))
-
       )}
 
     </div>

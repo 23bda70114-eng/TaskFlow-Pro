@@ -46,6 +46,76 @@ function App() {
   };
 
   // =========================
+  // CSV EXPORT
+  // =========================
+
+  const exportCSV = () => {
+    if (tasks.length === 0) {
+      showToast("No tasks available to export!");
+      return;
+    }
+
+    const headers = [
+      "Title",
+      "Description",
+      "Status",
+      "Priority",
+      "Due Date",
+      "Category",
+      "Tags",
+      "Recurrence"
+    ];
+
+    const rows = tasks.map((task) => [
+      task.title || "",
+      task.description || "",
+      task.status || "",
+      task.priority || "",
+      task.dueDate || "",
+      task.category || "",
+      task.tags || "",
+      task.recurrence || "None"
+    ]);
+
+    const csvContent = [
+      headers,
+      ...rows
+    ]
+      .map((row) =>
+        row
+          .map((value) =>
+            `"${String(value).replace(/"/g, '""')}"`
+          )
+          .join(",")
+      )
+      .join("\n");
+
+    const blob = new Blob(
+      [csvContent],
+      {
+        type: "text/csv;charset=utf-8;"
+      }
+    );
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = "TaskFlow_Tasks.csv";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+
+    URL.revokeObjectURL(url);
+
+    showToast("Tasks exported successfully!");
+  };
+
+  // =========================
   // DASHBOARD STATISTICS
   // =========================
 
@@ -118,23 +188,28 @@ function App() {
 
   const categoryCounts = {
     College: tasks.filter(
-      (task) => (task.category || "Other") === "College"
+      (task) =>
+        (task.category || "Other") === "College"
     ).length,
 
     Work: tasks.filter(
-      (task) => (task.category || "Other") === "Work"
+      (task) =>
+        (task.category || "Other") === "Work"
     ).length,
 
     Project: tasks.filter(
-      (task) => (task.category || "Other") === "Project"
+      (task) =>
+        (task.category || "Other") === "Project"
     ).length,
 
     Personal: tasks.filter(
-      (task) => (task.category || "Other") === "Personal"
+      (task) =>
+        (task.category || "Other") === "Personal"
     ).length,
 
     Other: tasks.filter(
-      (task) => (task.category || "Other") === "Other"
+      (task) =>
+        (task.category || "Other") === "Other"
     ).length
   };
 
@@ -216,11 +291,13 @@ function App() {
 
       const matchCategory =
         categoryFilter === "All" ||
-        (task.category || "Other") === categoryFilter;
+        (task.category || "Other") ===
+          categoryFilter;
 
       const matchPriority =
         priorityFilter === "All" ||
-        (task.priority || "Medium") === priorityFilter;
+        (task.priority || "Medium") ===
+          priorityFilter;
 
       const matchDue = (() => {
         if (dueFilter === "All") {
@@ -236,9 +313,13 @@ function App() {
         }
 
         const todayDate = new Date();
+
         todayDate.setHours(0, 0, 0, 0);
 
-        const taskDueDate = new Date(task.dueDate);
+        const taskDueDate = new Date(
+          task.dueDate
+        );
+
         taskDueDate.setHours(0, 0, 0, 0);
 
         if (dueFilter === "Overdue") {
@@ -316,19 +397,6 @@ function App() {
       return 0;
     });
 
-  // =========================
-  // CLEAR FILTERS
-  // =========================
-
-  const clearFilters = () => {
-    setSearch("");
-    setFilter("All");
-    setCategoryFilter("All");
-    setPriorityFilter("All");
-    setDueFilter("All");
-    setSortBy("Default");
-  };
-
   return (
     <div
       className={
@@ -360,6 +428,8 @@ function App() {
 
         darkMode={darkMode}
         setDarkMode={setDarkMode}
+
+        exportCSV={exportCSV}
       />
 
       {/* Toast */}
@@ -428,7 +498,8 @@ function App() {
           </div>
 
           <p>
-            {completedTasks} of {totalTasks} tasks completed
+            {completedTasks} of {totalTasks} tasks
+            completed
           </p>
         </div>
       </div>
@@ -437,7 +508,7 @@ function App() {
 
       <CalendarView tasks={tasks} />
 
-      {/* Kanban Board */}
+      {/* Kanban */}
 
       <KanbanBoard
         tasks={tasks}
@@ -445,7 +516,7 @@ function App() {
         showToast={showToast}
       />
 
-      {/* Task Analytics */}
+      {/* Analytics */}
 
       <div className="analytics-section">
         <h2>📊 Task Analytics</h2>
@@ -453,8 +524,6 @@ function App() {
         <p className="analytics-subtitle">
           Overview of your tasks
         </p>
-
-        {/* Category */}
 
         <h3 className="analytics-heading">
           🏷️ By Category
@@ -476,7 +545,8 @@ function App() {
                   className="analytics-fill"
                   style={{
                     width: `${
-                      (count / maxCategoryCount) * 100
+                      (count / maxCategoryCount) *
+                      100
                     }%`
                   }}
                 ></div>
@@ -484,8 +554,6 @@ function App() {
             </div>
           )
         )}
-
-        {/* Status */}
 
         <h3 className="analytics-heading">
           📌 By Status
@@ -507,7 +575,8 @@ function App() {
                   className="analytics-fill status-fill"
                   style={{
                     width: `${
-                      (count / maxStatusCount) * 100
+                      (count / maxStatusCount) *
+                      100
                     }%`
                   }}
                 ></div>
@@ -515,8 +584,6 @@ function App() {
             </div>
           )
         )}
-
-        {/* Priority */}
 
         <h3 className="analytics-heading">
           🔥 By Priority
@@ -538,7 +605,8 @@ function App() {
                   className="analytics-fill priority-fill"
                   style={{
                     width: `${
-                      (count / maxPriorityCount) * 100
+                      (count / maxPriorityCount) *
+                      100
                     }%`
                   }}
                 ></div>
@@ -548,7 +616,7 @@ function App() {
         )}
       </div>
 
-      {/* Visual Charts */}
+      {/* Charts */}
 
       <AnalyticsCharts
         pending={pendingTasks}
@@ -562,7 +630,7 @@ function App() {
 
       <Notifications tasks={tasks} />
 
-      {/* Task Area */}
+      {/* Tasks */}
 
       <div className="main">
         <TaskForm

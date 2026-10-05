@@ -9,6 +9,7 @@ function TaskForm({ getTasks, editTask, setEditTask, showToast }) {
   const [dueDate, setDueDate] = useState("");
   const [category, setCategory] = useState("Other");
   const [tags, setTags] = useState("");
+  const [recurrence, setRecurrence] = useState("None");
 
   useEffect(() => {
     if (editTask) {
@@ -19,6 +20,7 @@ function TaskForm({ getTasks, editTask, setEditTask, showToast }) {
       setDueDate(editTask.dueDate || "");
       setCategory(editTask.category || "Other");
       setTags(editTask.tags || "");
+      setRecurrence(editTask.recurrence || "None");
     }
   }, [editTask]);
 
@@ -36,7 +38,8 @@ function TaskForm({ getTasks, editTask, setEditTask, showToast }) {
         priority,
         dueDate,
         category,
-        tags
+        tags,
+        recurrence
       };
 
       if (editTask) {
@@ -62,6 +65,7 @@ function TaskForm({ getTasks, editTask, setEditTask, showToast }) {
       setDueDate("");
       setCategory("Other");
       setTags("");
+      setRecurrence("None");
 
       setEditTask(null);
 
@@ -167,6 +171,29 @@ function TaskForm({ getTasks, editTask, setEditTask, showToast }) {
           setDueDate(e.target.value)
         }
       />
+
+      <select
+        value={recurrence}
+        onChange={(e) =>
+          setRecurrence(e.target.value)
+        }
+      >
+        <option value="None">
+          🔁 No Repeat
+        </option>
+
+        <option value="Daily">
+          🔁 Daily
+        </option>
+
+        <option value="Weekly">
+          🔁 Weekly
+        </option>
+
+        <option value="Monthly">
+          🔁 Monthly
+        </option>
+      </select>
 
       <input
         type="text"

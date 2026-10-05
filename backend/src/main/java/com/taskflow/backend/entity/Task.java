@@ -11,21 +11,15 @@ public class Task {
     private Long id;
 
     private String title;
-
     private String description;
-
     private String status;
-
     private String priority;
-
     private String dueDate;
-
     private String category;
-
     private String tags;
+    private String recurrence;
 
-    public Task() {
-    }
+    public Task() {}
 
     public Long getId() {
         return id;
@@ -89,5 +83,13 @@ public class Task {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public String getRecurrence() {
+        return recurrence;
+    }
+
+    public void setRecurrence(String recurrence) {
+        this.recurrence = recurrence;
     }
 }
