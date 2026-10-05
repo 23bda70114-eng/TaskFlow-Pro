@@ -1,4 +1,12 @@
+import { useEffect, useState } from "react";
+
 function Notifications({ tasks }) {
+
+  const [readNotifications, setReadNotifications] = useState(() => {
+    const saved = localStorage.getItem("taskflowReadNotifications");
+
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -18,56 +26,138 @@ function Notifications({ tasks }) {
       (dueDate - today) / (1000 * 60 * 60 * 24)
     );
 
-    if (difference < 0) {
+    let notification = null;
 
-      notifications.push({
+    if (difference < 0) {
+      notification = {
+        id: `${task.id}-overdue`,
         type: "overdue",
         icon: "⚠️",
         title: task.title,
         message: "This task is overdue."
-      });
-
+      };
     } else if (difference === 0) {
-
-      notifications.push({
+      notification = {
+        id: `${task.id}-today`,
         type: "today",
         icon: "📅",
         title: task.title,
         message: "This task is due today."
-      });
-
+      };
     } else if (difference === 1) {
-
-      notifications.push({
+      notification = {
+        id: `${task.id}-tomorrow`,
         type: "tomorrow",
         icon: "⏰",
         title: task.title,
         message: "This task is due tomorrow."
-      });
-
+      };
     } else if (difference <= 7) {
-
-      notifications.push({
+      notification = {
+        id: `${task.id}-upcoming`,
         type: "upcoming",
         icon: "🚀",
         title: task.title,
         message: `Due in ${difference} days.`
-      });
-
+      };
     }
 
+    if (notification) {
+      notifications.push(notification);
+    }
   });
+
+  const unreadCount = notifications.filter(
+    (notification) => !readNotifications.includes(notification.id)
+  ).length;
+
+  const markAsRead = (id) => {
+
+    if (readNotifications.includes(id)) {
+      return;
+    }
+
+    const updated = [...readNotifications, id];
+
+    setReadNotifications(updated);
+
+    localStorage.setItem(
+      "taskflowReadNotifications",
+      JSON.stringify(updated)
+    );
+  };
+
+  const markAllAsRead = () => {
+
+    const allIds = notifications.map(
+      (notification) => notification.id
+    );
+
+    setReadNotifications(allIds);
+
+    localStorage.setItem(
+      "taskflowReadNotifications",
+      JSON.stringify(allIds)
+    );
+  };
+
+  const markAllAsUnread = () => {
+
+    setReadNotifications([]);
+
+    localStorage.removeItem(
+      "taskflowReadNotifications"
+    );
+  };
+
+  useEffect(() => {
+
+    const currentIds = notifications.map(
+      (notification) => notification.id
+    );
+
+    const cleaned = readNotifications.filter(
+      (id) => currentIds.includes(id)
+    );
+
+    if (cleaned.length !== readNotifications.length) {
+
+      setReadNotifications(cleaned);
+
+      localStorage.setItem(
+        "taskflowReadNotifications",
+        JSON.stringify(cleaned)
+      );
+    }
+
+  }, [tasks]);
 
   return (
     <div className="notifications-section">
 
       <div className="notifications-header">
 
-        <h2>🔔 Notifications</h2>
+        <div className="notifications-title">
+          <h2>🔔 Notifications</h2>
 
-        <span className="notification-count">
-          {notifications.length}
-        </span>
+          <span className="notification-count">
+            {unreadCount}
+          </span>
+        </div>
+
+        {notifications.length > 0 && (
+          <div className="notification-actions">
+
+            <button onClick={markAllAsRead}>
+              ✓ Mark all as read
+            </button>
+
+            <button onClick={markAllAsUnread}>
+              ↺ Mark all unread
+            </button>
+
+          </div>
+        )}
 
       </div>
 
@@ -91,31 +181,56 @@ function Notifications({ tasks }) {
 
         <div className="notification-list">
 
-          {notifications.map((notification, index) => (
+          {notifications.map((notification) => {
 
-            <div
-              className={`notification-item ${notification.type}`}
-              key={`${notification.title}-${index}`}
-            >
+            const isRead = readNotifications.includes(
+              notification.id
+            );
 
-              <div className="notification-icon">
-                {notification.icon}
+            return (
+              <div
+                className={`notification-item ${
+                  notification.type
+                } ${isRead ? "read" : "unread"}`}
+                key={notification.id}
+              >
+
+                <div className="notification-icon">
+                  {notification.icon}
+                </div>
+
+                <div className="notification-content">
+
+                  <h3>{notification.title}</h3>
+
+                  <p>{notification.message}</p>
+
+                </div>
+
+                <div className="notification-status">
+
+                  {isRead ? (
+                    <span className="read-label">
+                      ✓ Read
+                    </span>
+                  ) : (
+                    <button
+                      className="mark-read-btn"
+                      onClick={() =>
+                        markAsRead(notification.id)
+                      }
+                    >
+                      Mark as read
+                    </button>
+                  )}
+
+                </div>
+
               </div>
-
-              <div className="notification-content">
-
-                <h3>{notification.title}</h3>
-
-                <p>{notification.message}</p>
-
-              </div>
-
-            </div>
-
-          ))}
+            );
+          })}
 
         </div>
-
       )}
 
     </div>

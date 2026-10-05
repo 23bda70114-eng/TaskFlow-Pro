@@ -902,3 +902,126 @@ grid-template-columns:1fr;
     width: 100%;
   }
 }
+/* Notification Read / Unread */
+
+.notifications-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notification-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.notification-actions button {
+  border: none;
+  background: #e5e7eb;
+  color: #374151;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.notification-actions button:hover {
+  background: #d1d5db;
+}
+
+.notification-item {
+  position: relative;
+  transition: 0.2s ease;
+}
+
+.notification-item.unread {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.notification-item.read {
+  opacity: 0.65;
+}
+
+.notification-item.read .notification-content h3 {
+  text-decoration: line-through;
+}
+
+.notification-status {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.mark-read-btn {
+  border: none;
+  background: #2563eb;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.mark-read-btn:hover {
+  background: #1d4ed8;
+}
+
+.read-label {
+  color: #16a34a;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* Dark Mode */
+
+.dark-mode .notification-actions button {
+  background: #374151;
+  color: #f9fafb;
+}
+
+.dark-mode .notification-actions button:hover {
+  background: #4b5563;
+}
+
+.dark-mode .notification-item.read {
+  opacity: 0.55;
+}
+
+.dark-mode .read-label {
+  color: #4ade80;
+}
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+  .notifications-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .notification-actions {
+    width: 100%;
+  }
+
+  .notification-actions button {
+    flex: 1;
+  }
+
+  .notification-item {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .notification-status {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  .mark-read-btn {
+    width: 100%;
+  }
+}
