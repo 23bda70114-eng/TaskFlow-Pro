@@ -5,7 +5,6 @@ function AnalyticsCharts({
   medium,
   low
 }) {
-
   const totalStatus = pending + completed;
 
   const pendingPercent =
@@ -40,33 +39,82 @@ function AnalyticsCharts({
       ? 0
       : (pending / totalStatus) * 360;
 
+  const completedAngle =
+    totalStatus === 0
+      ? 0
+      : (completed / totalStatus) * 360;
+
+  const productivity =
+    totalStatus === 0
+      ? 0
+      : Math.round((completed / totalStatus) * 100);
+
   return (
     <div className="charts-section">
 
-      {/* Status Chart */}
+      {/* ================= STATUS OVERVIEW ================= */}
 
-      <div className="chart-card">
+      <div className="chart-card professional-chart-card">
 
-        <h2>📌 Status Overview</h2>
+        <div className="chart-header">
+          <div>
+            <h2>📌 Status Overview</h2>
+            <p>Current task completion status</p>
+          </div>
 
-        <div className="donut-container">
+          <span className="chart-badge">
+            {productivity}% Done
+          </span>
+        </div>
 
-          <div
-            className="donut-chart"
-            style={{
-              background: `conic-gradient(
-                #f59e0b 0deg ${pendingAngle}deg,
-                #16a34a ${pendingAngle}deg 360deg
-              )`
-            }}
-          >
+        <div className="donut-layout">
 
-            <div className="donut-center">
+          <div className="donut-container">
 
-              <strong>{totalStatus}</strong>
+            <div
+              className="donut-chart"
+              style={{
+                background:
+                  totalStatus === 0
+                    ? "#e5e7eb"
+                    : `conic-gradient(
+                        #16a34a 0deg ${completedAngle}deg,
+                        #f59e0b ${completedAngle}deg 360deg
+                      )`
+              }}
+            >
+              <div className="donut-center">
+                <strong>{totalStatus}</strong>
+                <span>Total Tasks</span>
+              </div>
+            </div>
 
-              <span>Tasks</span>
+          </div>
 
+          <div className="status-summary">
+
+            <div className="status-summary-item completed-summary">
+              <div className="summary-icon">
+                ✓
+              </div>
+
+              <div>
+                <span>Completed</span>
+                <strong>{completed}</strong>
+                <small>{completedPercent}%</small>
+              </div>
+            </div>
+
+            <div className="status-summary-item pending-summary">
+              <div className="summary-icon">
+                ⏳
+              </div>
+
+              <div>
+                <span>Pending</span>
+                <strong>{pending}</strong>
+                <small>{pendingPercent}%</small>
+              </div>
             </div>
 
           </div>
@@ -74,18 +122,6 @@ function AnalyticsCharts({
         </div>
 
         <div className="chart-legend">
-
-          <div className="legend-item">
-
-            <span className="legend-dot pending-dot"></span>
-
-            <span>Pending</span>
-
-            <strong>
-              {pending} ({pendingPercent}%)
-            </strong>
-
-          </div>
 
           <div className="legend-item">
 
@@ -99,23 +135,54 @@ function AnalyticsCharts({
 
           </div>
 
+          <div className="legend-item">
+
+            <span className="legend-dot pending-dot"></span>
+
+            <span>Pending</span>
+
+            <strong>
+              {pending} ({pendingPercent}%)
+            </strong>
+
+          </div>
+
         </div>
 
       </div>
 
-      {/* Priority Chart */}
 
-      <div className="chart-card">
+      {/* ================= PRIORITY OVERVIEW ================= */}
 
-        <h2>🔥 Priority Overview</h2>
+      <div className="chart-card professional-chart-card">
+
+        <div className="chart-header">
+          <div>
+            <h2>🔥 Priority Overview</h2>
+            <p>Task distribution by priority</p>
+          </div>
+
+          <span className="chart-badge priority-badge">
+            {totalPriority} Tasks
+          </span>
+        </div>
+
 
         <div className="priority-chart">
+
+          {/* HIGH */}
 
           <div className="priority-chart-row">
 
             <div className="priority-chart-label">
-              <span>High</span>
+
+              <div className="priority-title">
+                <span className="priority-dot high-priority-dot"></span>
+                <span>High</span>
+              </div>
+
               <strong>{high}</strong>
+
             </div>
 
             <div className="priority-chart-bar">
@@ -125,17 +192,30 @@ function AnalyticsCharts({
                 style={{
                   width: `${highPercent}%`
                 }}
-              ></div>
+              >
+                {high > 0 && (
+                  <span>{highPercent}%</span>
+                )}
+              </div>
 
             </div>
 
           </div>
 
+
+          {/* MEDIUM */}
+
           <div className="priority-chart-row">
 
             <div className="priority-chart-label">
-              <span>Medium</span>
+
+              <div className="priority-title">
+                <span className="priority-dot medium-priority-dot"></span>
+                <span>Medium</span>
+              </div>
+
               <strong>{medium}</strong>
+
             </div>
 
             <div className="priority-chart-bar">
@@ -145,17 +225,30 @@ function AnalyticsCharts({
                 style={{
                   width: `${mediumPercent}%`
                 }}
-              ></div>
+              >
+                {medium > 0 && (
+                  <span>{mediumPercent}%</span>
+                )}
+              </div>
 
             </div>
 
           </div>
 
+
+          {/* LOW */}
+
           <div className="priority-chart-row">
 
             <div className="priority-chart-label">
-              <span>Low</span>
+
+              <div className="priority-title">
+                <span className="priority-dot low-priority-dot"></span>
+                <span>Low</span>
+              </div>
+
               <strong>{low}</strong>
+
             </div>
 
             <div className="priority-chart-bar">
@@ -165,7 +258,11 @@ function AnalyticsCharts({
                 style={{
                   width: `${lowPercent}%`
                 }}
-              ></div>
+              >
+                {low > 0 && (
+                  <span>{lowPercent}%</span>
+                )}
+              </div>
 
             </div>
 
@@ -173,10 +270,14 @@ function AnalyticsCharts({
 
         </div>
 
+
         <div className="priority-total">
 
-          Total Priority Tasks:
-          {" "}
+          <div>
+            <span>Total Priority Tasks</span>
+            <small>Across all priority levels</small>
+          </div>
+
           <strong>{totalPriority}</strong>
 
         </div>
