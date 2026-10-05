@@ -5,11 +5,25 @@ function Navbar({
   setFilter,
   categoryFilter,
   setCategoryFilter,
+  priorityFilter,
+  setPriorityFilter,
+  dueFilter,
+  setDueFilter,
   sortBy,
   setSortBy,
   darkMode,
   setDarkMode
 }) {
+
+  const clearFilters = () => {
+    setSearch("");
+    setFilter("All");
+    setCategoryFilter("All");
+    setPriorityFilter("All");
+    setDueFilter("All");
+    setSortBy("Default");
+  };
+
   return (
     <nav className="navbar">
 
@@ -26,7 +40,7 @@ function Navbar({
 
         <input
           type="text"
-          placeholder="Search Task..."
+          placeholder="Search title, description, tags..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -53,6 +67,27 @@ function Navbar({
         </select>
 
         <select
+          value={priorityFilter}
+          onChange={(e) => setPriorityFilter(e.target.value)}
+        >
+          <option value="All">Priority: All</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+
+        <select
+          value={dueFilter}
+          onChange={(e) => setDueFilter(e.target.value)}
+        >
+          <option value="All">Due: All</option>
+          <option value="Overdue">Overdue</option>
+          <option value="Today">Due Today</option>
+          <option value="Upcoming">Upcoming</option>
+          <option value="NoDate">No Due Date</option>
+        </select>
+
+        <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
         >
@@ -62,6 +97,13 @@ function Navbar({
           <option value="Newest">Newest</option>
           <option value="AZ">A → Z</option>
         </select>
+
+        <button
+          onClick={clearFilters}
+          className="clear-filters-btn"
+        >
+          ✕ Clear
+        </button>
 
         <button
           className="dark-mode-btn"

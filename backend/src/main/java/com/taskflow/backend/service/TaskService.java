@@ -13,22 +13,18 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
-    // Add Task
     public Task addTask(Task task) {
         return taskRepository.save(task);
     }
 
-    // Get All Tasks
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
-    // Get Task By Id
     public Task getTaskById(Long id) {
         return taskRepository.findById(id).orElseThrow();
     }
 
-    // Update Task
     public Task updateTask(Long id, Task updatedTask) {
 
         Task task = taskRepository.findById(id).orElseThrow();
@@ -38,11 +34,12 @@ public class TaskService {
         task.setStatus(updatedTask.getStatus());
         task.setPriority(updatedTask.getPriority());
         task.setDueDate(updatedTask.getDueDate());
+        task.setCategory(updatedTask.getCategory());
+        task.setTags(updatedTask.getTags());
 
         return taskRepository.save(task);
     }
 
-    // Delete Task
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
     }

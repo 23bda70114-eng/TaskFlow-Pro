@@ -90,6 +90,7 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
 
       {pendingDelete && (
         <div className="undo-delete-bar">
+
           <div>
             <strong>🗑️ Task deleted</strong>
             <span>{pendingDelete.title}</span>
@@ -98,23 +99,36 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
           <button onClick={undoDelete}>
             ↩️ Undo
           </button>
+
         </div>
       )}
 
       {tasks.length === 0 ? (
+
         <div className="empty-state">
-          <div className="empty-icon">📋</div>
+
+          <div className="empty-icon">
+            📋
+          </div>
 
           <h3>No Tasks Found</h3>
 
           <p>
             Try adding a new task or changing your search/filter.
           </p>
+
         </div>
+
       ) : (
+
         tasks
-          .filter((task) => !pendingDelete || task.id !== pendingDelete.id)
+          .filter(
+            (task) =>
+              !pendingDelete ||
+              task.id !== pendingDelete.id
+          )
           .map((task) => (
+
             <div className="card" key={task.id}>
 
               <h3>{task.title}</h3>
@@ -157,6 +171,29 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
 
               </div>
 
+              {/* Custom Tags */}
+
+              {task.tags && (
+                <div className="custom-tags">
+
+                  {task.tags
+                    .split(",")
+                    .map((tag) => tag.trim())
+                    .filter((tag) => tag !== "")
+                    .map((tag, index) => (
+
+                      <span
+                        className="custom-tag"
+                        key={`${tag}-${index}`}
+                      >
+                        #{tag}
+                      </span>
+
+                    ))}
+
+                </div>
+              )}
+
               {task.dueDate && (
                 <p className="due-date">
                   📅 Due: {task.dueDate}
@@ -180,7 +217,9 @@ function TaskList({ tasks, getTasks, setEditTask, showToast }) {
               </div>
 
             </div>
+
           ))
+
       )}
 
     </div>

@@ -22,6 +22,8 @@ public class Task {
 
     private String category;
 
+    private String tags;
+
     public Task() {
     }
 
@@ -79,5 +81,13 @@ public class Task {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 }
