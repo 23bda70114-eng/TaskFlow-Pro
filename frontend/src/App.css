@@ -827,3 +827,78 @@ grid-template-columns:1fr;
   }
 
 }
+/* Undo Delete */
+
+.undo-delete-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 15px 18px;
+  margin-bottom: 20px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-left: 5px solid #f59e0b;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.undo-delete-bar div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.undo-delete-bar strong {
+  color: #92400e;
+  font-size: 16px;
+}
+
+.undo-delete-bar span {
+  color: #78350f;
+  font-size: 14px;
+}
+
+.undo-delete-bar button {
+  border: none;
+  background: #2563eb;
+  color: white;
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.undo-delete-bar button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* Dark Mode */
+
+.dark-mode .undo-delete-bar {
+  background: #451f0a;
+  border-color: #92400e;
+}
+
+.dark-mode .undo-delete-bar strong {
+  color: #fed7aa;
+}
+
+.dark-mode .undo-delete-bar span {
+  color: #fdba74;
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .undo-delete-bar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .undo-delete-bar button {
+    width: 100%;
+  }
+}
